@@ -9,6 +9,9 @@ on:
 permissions:
   contents: read
 
+env:
+  SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -19,7 +22,9 @@ jobs:
           bun-version-file: .tool-versions
 
       - run: bun i --frozen-lockfile
-      - run: bun run --env-file=.env gen-types
+      - run: bun run gen-types
+        if: github.event_name != 'pull_request'
+        # skip on PRs since secret context is not available
       - run: bun run lint --fix
 
       - uses: autofix-ci/action@2891949f3779a1cafafae1523058501de3d4e944 # v1.3.1

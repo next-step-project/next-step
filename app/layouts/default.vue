@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 
-const route = useRoute();
 const user = useSupabaseUser();
 
 const open = ref(false);
@@ -70,8 +69,8 @@ const groups = computed(() => [{
 
       <template #footer>
         <UUser
-          :name="getUserName(user!)"
-          :avatar="{ text: getUserName(user!).slice(0, 1) }"
+          :name="getUserName(user)"
+          :avatar="{ text: getUserName(user).slice(0, 1) }"
         />
       </template>
     </UDashboardSidebar>
