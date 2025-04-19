@@ -6,9 +6,6 @@ on:
   push:
     branches: [main]
 
-permissions:
-  contents: read
-
 env:
   SUPABASE_DATABASE_URL: ${{ secrets.SUPABASE_DATABASE_URL }}
 
@@ -30,4 +27,7 @@ jobs:
       - uses: autofix-ci/action@2891949f3779a1cafafae1523058501de3d4e944 # v1.3.1
         if: always()
         with:
-          commit-message: 'style: autofix'
+          commit-message: |
+            style: autofix
+
+            [skip netlify]

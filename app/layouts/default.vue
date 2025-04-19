@@ -11,6 +11,7 @@ const links: [NavigationMenuItem[], NavigationMenuItem[] ] = [[{
 }], [{
   label: 'New Topic',
   icon: 'i-lucide-plus',
+  onSelect: async () => navigateTo(`/topic/${await createTopic()}`),
 }/* , {  label: 'Feedback',  icon: 'i-lucide-message-circle',  to: 'https://github.com/nuxt-ui-pro/dashboard',  target: '_blank',} */]];
 
 const groups = computed(() => [{
