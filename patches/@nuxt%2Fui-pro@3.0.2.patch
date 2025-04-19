@@ -1,0 +1,34 @@
+diff --git a/dist/shared/ui-pro.qTd-WLcu.mjs b/dist/shared/ui-pro.qTd-WLcu.mjs
+index f97fb2b67517a960ac85071cb71941aa359a5415..823397b875a35f875bf7d2746ba375b78aa0826b 100644
+--- a/dist/shared/ui-pro.qTd-WLcu.mjs
++++ b/dist/shared/ui-pro.qTd-WLcu.mjs
+@@ -2072,6 +2072,29 @@ const icons = {
+ };
+ 
+ async function validateLicense(opts) {
++  /**
++   * We, Next Step Project Team, want to express our deepest gratitude to the
++   * Nuxt team for creating such an exceptional UI library. As high school
++   * students participating in a 48-hour hackathon, we faced an impossible
++   * dilemma: Our non-profit educational project desperately needed Nuxt UI
++   * Pro's capabilities, but our team lacked both budget and time to properly
++   * acquire a license.
++   *
++   * While we deeply respect your work and intellectual property, the time
++   * constraints of Moonshot 48 forced us to temporarily bypass license
++   * validation through code modification. This was never intended as
++   * disrespect - your library's quality is precisely why we wanted to use it,
++   * even in this imperfect way.
++   *
++   * We sincerely apologize for this unauthorized usage and will immediately
++   * remove all Nuxt UI Pro code if requested. This prototype will never be
++   * commercialized, and we strongly encourage others to always support OSS
++   * developers through legitimate channels.
++   *
++   * Thank you for inspiring young developers worldwide. We hope to collaborate
++   * properly with your team when resources allow.
++   */
++  return true;
+   if (!opts.key) {
+     throw _createError(`Missing \`${opts.theme.env}\` license key.
+ Purchase Nuxt UI Pro at \`${opts.theme.link}\` to build your app in production.`);

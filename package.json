@@ -1,0 +1,34 @@
+{
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "push-db": "supabase db push --db-url $SUPABASE_DATABASE_URL",
+    "gen-types": "supabase gen types --db-url $SUPABASE_DATABASE_URL --lang typescript > ./types/database.types.ts",
+    "type-check": "nuxt typecheck"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.12.0",
+    "@iconify-json/lucide": "^1.2.37",
+    "@nuxt/ui": "^3.0.2",
+    "@nuxt/ui-pro": "^3.0.2",
+    "@nuxtjs/supabase": "1.5.0",
+    "@supabase/supabase-js": "^2.49.4",
+    "@typed-sigterm/eslint-config": "^1.4.1",
+    "@vueuse/core": "^13.1.0",
+    "@vueuse/nuxt": "^13.1.0",
+    "eslint": "^9.25.0",
+    "nuxt": "^3.16.2",
+    "supabase": "^2.20.12",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "zod": "^3.24.3"
+  },
+  "patchedDependencies": {
+    "@nuxt/ui-pro@3.0.2": "patches/@nuxt%2Fui-pro@3.0.2.patch"
+  }
+}
