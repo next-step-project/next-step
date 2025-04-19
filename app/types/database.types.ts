@@ -123,7 +123,7 @@ export type Database = {
           created_at?: string | null
           description: string
           id?: string
-          owner: string
+          owner?: string
           title: string
           updated_at?: string | null
         }
