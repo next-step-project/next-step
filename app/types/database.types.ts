@@ -39,6 +39,7 @@ export type Database = {
           created_at: string | null
           description: string
           id: string
+          requesting_tasks: boolean | null
           status: Database["public"]["Enums"]["task_status"]
           title: string
           topic_id: string
@@ -48,6 +49,7 @@ export type Database = {
           created_at?: string | null
           description: string
           id?: string
+          requesting_tasks?: boolean | null
           status?: Database["public"]["Enums"]["task_status"]
           title: string
           topic_id: string
@@ -57,6 +59,7 @@ export type Database = {
           created_at?: string | null
           description?: string
           id?: string
+          requesting_tasks?: boolean | null
           status?: Database["public"]["Enums"]["task_status"]
           title?: string
           topic_id?: string
