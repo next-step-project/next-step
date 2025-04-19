@@ -71,8 +71,8 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
         description="Enter your credentials to access your account."
         icon="i-lucide-user"
         :fields
-        :disabled="loading"
-        :loading
+        :disabled="status === 'loading'"
+        :loading="status === 'loading'"
         @submit="onSubmit"
       />
     </UPageCard>
