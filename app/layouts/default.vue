@@ -55,10 +55,10 @@ onMounted(async () => {
           color="neutral"
           variant="ghost"
           block
-          class="text-2xl"
+          class="text-2xl bg-transparent!"
           to="/"
         >
-          Next Step
+          <img class="h-20" src="../assets/brand.png" alt="NextStep" >
         </UButton>
       </template>
 

@@ -1,3 +1,4 @@
+import type { Enums } from '~/types/database.types';
 import type { FullTopic } from '~/utils/topics';
 
 export default async (supa: Supa, id: string) => {
@@ -64,5 +65,17 @@ export default async (supa: Supa, id: string) => {
     }
   };
 
-  return { data, syncTopic, syncTimelineNode, addTimelineNode, syncTask };
+  const addTasks = async (content: string[], status: Enums<'task_status'>) => {
+    const { data: t } = await supa.from('tasks')
+      .insert(content.map(title => ({
+        title,
+        status,
+        topic_id: id,
+      })))
+      .select('*')
+      .throwOnError();
+    data.value.tasks.push(...t);
+  }
+
+  return { data, syncTopic, syncTimelineNode, addTimelineNode, syncTask, addTasks };
 };
