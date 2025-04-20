@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 
+const route = useRoute('/topic/[id]');
 const supa = useSupabaseClient();
 const user = useSupabaseUser();
 
@@ -15,7 +16,7 @@ const groups = computed(() => [{
   label: 'Go to',
   items: links.value.flat().map((item) => {
     return typeof item.to === 'string' && item.to.startsWith('/topic/')
-      ? { ...item, icon: 'i-lucide-target' }
+      ? { ...item, icon: 'i-lucide-target', active: route.path === item.to }
       : item;
   }),
 }, {
@@ -33,18 +34,12 @@ const groups = computed(() => [{
 onMounted(async () => {
   if (!user.value)
     return;
-  const { data } = await supa
-    .from('topics')
-    .select('id, title')
-    .eq('owner', user.value.id)
-    .order('created_at', { ascending: false })
-    .throwOnError();
-  links.value[0] = data.map((topic) => ({
+  links.value[0] = (await listTopics(supa)).map(topic => ({
     label: topic.title,
     icon: 'i-lucide-target',
     to: `/topic/${topic.id}`,
   }));
-})
+});
 </script>
 
 <template>

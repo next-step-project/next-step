@@ -1,4 +1,3 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
 import type { MergeDeep } from 'type-fest';
 import type { Tables } from '~/types/database.types';
 
@@ -10,7 +9,7 @@ export type FullTopic = MergeDeep<
   }
 >;
 
-export async function createTopic(supa: SupabaseClient) {
+export async function createTopic(supa: Supa) {
   const { data } = await supa
     .from('topics')
     .insert({
@@ -24,10 +23,19 @@ export async function createTopic(supa: SupabaseClient) {
   return data.id;
 }
 
-export function deleteTopic(supa: SupabaseClient, id: string) {
+export function deleteTopic(supa: Supa, id: string) {
   return supa
     .from('topics')
     .delete()
     .eq('id', id)
     .throwOnError();
+}
+
+export async function listTopics(supa: Supa) {
+  return (await supa
+    .from('topics')
+    .select('id, title')
+    .order('created_at', { ascending: false })
+    .throwOnError()
+  ).data;
 }

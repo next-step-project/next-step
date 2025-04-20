@@ -1,13 +1,45 @@
 <script setup lang="ts">
-const route = useRoute();
+import type { CalendarDate } from '@internationalized/date';
+import type { Tables } from '~/types/database.types';
+import { fromDate, getLocalTimeZone } from '@internationalized/date';
 
-const { data: topic } = useAsyncData(() => useTopic(route.params.id as string));
+const route = useRoute();
+const supa = useSupabaseClient();
+
+const {
+  data: topic,
+  syncTopic,
+  syncTimelineNode,
+  syncTask,
+} = await useTopic(supa, route.params.id as string);
 
 function generate() {
   $fetch('/api/request-tasks', {
     method: 'post',
     body: { id: topic.value?.id },
   });
+}
+
+function addTimelineNode() {
+  const id = crypto.randomUUID();
+  topic.value.timeline_nodes.push({
+    id,
+    time: new Date(),
+    description: '',
+  });
+  syncTimelineNode(id);
+}
+
+function removeTimelineNode(id: string) {
+  topic.value.timeline_nodes = topic.value.timeline_nodes.filter(n => n.id !== id);
+  syncTimelineNode(id);
+}
+
+function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
+  if (!v)
+    return;
+  node.time = v.toString();
+  syncTimelineNode(node.id);
 }
 </script>
 
@@ -26,15 +58,52 @@ function generate() {
     <template #body>
       <UForm v-if="topic" class="space-y-4" :state="topic">
         <UFormField label="Description" hint="Describe it..." size="xl">
-          <UTextarea v-model="topic.description" class="w-full" />
+          <UTextarea v-model="topic.description" class="w-full" @change="syncTopic" />
         </UFormField>
 
-        <div class="grid grid-cols-[1fr_auto_1fr] items-center w-full gap-3">
-          <UFormField label="Timeline" size="xl" hint="What did you do...">
-            todo list
+        <div class="grid grid-cols-[1fr_auto_1fr] items-start w-full gap-3">
+          <UFormField label="Timeline" size="xl" hint="What did you do..." class="flex flex-col">
+            <div class="space-y-2">
+              <div v-for="node in topic.timeline_nodes" :key="node.id" class="flex items-start gap-2">
+                <DatePicker
+                  :model-value="fromDate(new Date(node.time), getLocalTimeZone())"
+                  class="w-[140px]"
+                  size="sm"
+                  @update:model-value="(v) => v && onPickDate(node, v)"
+                />
+
+                <UTextarea
+                  v-model="node.title"
+                  autoresize
+                  :rows="1"
+                  class="flex-grow"
+                  placeholder="Description..."
+                  size="sm"
+                  @change="syncTimelineNode(node.id)"
+                />
+                <UButton
+                  icon="i-heroicons-trash"
+                  size="sm"
+                  color="neutral"
+                  square
+                  variant="ghost"
+                  @click="removeTimelineNode(node.id)"
+                />
+              </div>
+            </div>
+
+            <UButton
+              label="Add Node"
+              icon="i-heroicons-plus"
+              size="sm"
+              variant="outline"
+              color="neutral"
+              class="mt-2 self-start"
+              @click="addTimelineNode"
+            />
           </UFormField>
 
-          <div class="h-8 border-l ring-inset" />
+          <div class="h-full border-l ring-inset self-stretch mt-6" />
 
           <UFormField label="Recommended Tasks" size="xl" :ui="{ label: 'items-start' }">
             <ul>

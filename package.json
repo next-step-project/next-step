@@ -8,7 +8,8 @@
     "postinstall": "nuxt prepare",
     "push-db": "supabase db push --db-url $SUPABASE_DATABASE_URL",
     "gen-types": "supabase gen types --db-url $SUPABASE_DATABASE_URL --lang typescript > ./app/types/database.types.ts",
-    "type-check": "nuxt typecheck"
+    "type-check": "nuxt typecheck",
+    "lint": "eslint ."
   },
   "devDependencies": {
     "@antfu/eslint-config": "^4.12.0",
