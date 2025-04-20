@@ -1,8 +1,8 @@
+import type { Tables } from '~/types/database.types';
 import process from 'node:process';
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server';
 import { ChatDeepSeek } from '@langchain/deepseek';
 import { z } from 'zod';
-import { Tables } from '~/types/database.types';
 
 const Body = z.object({
   id: z.string().uuid(),

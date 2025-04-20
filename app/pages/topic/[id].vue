@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CalendarDate } from '@internationalized/date';
 import type { Tables } from '~/types/database.types';
-import { toCalendarDate, getLocalTimeZone, fromDate } from '@internationalized/date';
+import { fromDate, getLocalTimeZone, toCalendarDate } from '@internationalized/date';
 
 const route = useRoute();
 const supa = useSupabaseClient();
@@ -80,7 +80,7 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
                   size="sm"
                   @change="syncTimelineNode(node.id)"
                 />
-                
+
                 <UButton
                   icon="i-heroicons-trash"
                   size="sm"

@@ -75,7 +75,7 @@ export default async (supa: Supa, id: string) => {
       .select('*')
       .throwOnError();
     data.value.tasks.push(...t);
-  }
+  };
 
   return { data, syncTopic, syncTimelineNode, addTimelineNode, syncTask, addTasks };
 };
