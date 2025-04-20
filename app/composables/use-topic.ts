@@ -9,53 +9,60 @@ export default async (supa: Supa, id: string) => {
     .throwOnError()
   ).data);
 
-  const syncTopic = () => {
-    return supa
-      .from('topics')
+  const syncTopic = async () => {
+    return await supa.from('topics')
       .update({
         title: data.value.title,
         description: data.value.description,
       })
       .eq('id', id)
-      .select('*')
       .throwOnError();
   };
 
-  const syncTimelineNode = (id: string) => {
+  const syncTimelineNode = async (id: string) => {
     const node = toRaw(data.value.timeline_nodes.find(t => t.id === id));
     if (node) {
-      return supa.from('timeline_nodes')
-        .upsert({
-          id: node.id,
+      await supa.from('timeline_nodes')
+        .update({
           title: node.title,
           time: node.time,
           topic_id: node.topic_id,
         })
-        .select('*')
+        .eq('id', id)
         .throwOnError();
     } else {
-      return supa.from('timeline_nodes')
+      await supa.from('timeline_nodes')
         .delete()
         .eq('id', id)
         .throwOnError();
     }
   };
 
-  const syncTask = (id: string) => {
+  const addTimelineNode = async () => {
+    const { data: n } = await supa.from('timeline_nodes')
+      .insert({
+        title: '',
+        topic_id: id,
+      })
+      .select('*')
+      .throwOnError();
+    data.value.timeline_nodes.push(n[0]!);
+  }
+
+  const syncTask = async (id: string) => {
     const task = toRaw(data.value.tasks.find(t => t.id === id));
     if (task) {
-      return supa.from('tasks')
+      await supa.from('tasks')
         .upsert(task)
         .eq('id', id)
-        .select('*')
         .throwOnError();
     } else {
-      return supa.from('tasks')
+      await supa.from('tasks')
         .delete()
         .eq('id', id)
         .throwOnError();
     }
   };
 
-  return { data, syncTopic, syncTimelineNode, syncTask };
+  return { data, syncTopic, syncTimelineNode, addTimelineNode, syncTask };
 };

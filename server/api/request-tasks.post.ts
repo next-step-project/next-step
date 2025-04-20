@@ -2,7 +2,6 @@ import process from 'node:process';
 import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server';
 import { ChatDeepSeek } from '@langchain/deepseek';
 import { z } from 'zod';
-import ModelResponseSchema from './model-response.schema.json';
 
 const Body = z.object({
   id: z.string().uuid(),
@@ -31,7 +30,7 @@ export default defineEventHandler(async (ev) => {
 
   const res = await model.invoke([{
     role: 'system',
-    content: `You are a helper assistant. You need to help users break down a big goal into several executable small tasks.
+    content: `You are a helper assistant. You need to help users guide users to obtain more information through specific actions to assist in decision-making.
 You may have given suggestions to users before.
 You will receive the following information:
 - User's major goals
@@ -39,25 +38,34 @@ You will receive the following information:
 - Progress
 - Existing tasks
 You must suggest tasks that are:
-1. Small, clear, and executable, like KRs.
-2. Related to the user's major goals and description
-3. Standing neutral and friendly
-4. Not using markdown
+1. Related to the user's major goals and description
+2. Standing neutral and friendly
+3. Not using markdown
+4. Including measurable metric, target value, clear timeframe, data source
+5. Using the same language as the user
 You must NOT suggest tasks that are:
 1. Repeat the same task, including the same task with different wording
 2. Already in the tasks table
 3. Already rejected by the user
 4. Not executable or off-topic
 5. Too broad or vague
-You must respond with a list of tasks in the following JSON format:
-\`\`\`json
-${JSON.stringify(ModelResponseSchema, null, 2)}
-\`\`\`
+You must respond in JSON without any explanation or markdown.
+The JSON should be an array of string, each string is a task.
+Correct example:
+  Topic: Decide on a new car
+  Description: I want to buy a new car, but I don't know which one to choose. I have a budget of $30,000 and I love long-distance travel. I don't care a lot about its appearance.
+  Progress: Not started.
+  Recommended tasks:
+    1. Go to SUV and MPV car comparison websites to get more information in 1 hour.
+    2. Contact 3 friends who have bought cars in the past 2 years and ask them about their experiences.
+    3. Checkout their negative reviews on the car forums.
+
 Current time is ${new Date().toISOString()}.`,
   }, {
     role: 'user',
     content: JSON.stringify(data[0]),
   }]);
+  console.log(res);
 
-  return res.content;
+  return JSON.parse(res.text) as string[];
 });

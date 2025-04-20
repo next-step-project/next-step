@@ -10,6 +10,7 @@ const {
   data: topic,
   syncTopic,
   syncTimelineNode,
+  addTimelineNode,
   syncTask,
 } = await useTopic(supa, route.params.id as string);
 
@@ -18,16 +19,6 @@ function generate() {
     method: 'post',
     body: { id: topic.value?.id },
   });
-}
-
-function addTimelineNode() {
-  const id = crypto.randomUUID();
-  topic.value.timeline_nodes.push({
-    id,
-    time: new Date(),
-    description: '',
-  });
-  syncTimelineNode(id);
 }
 
 function removeTimelineNode(id: string) {
@@ -40,6 +31,11 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
     return;
   node.time = v.toString();
   syncTimelineNode(node.id);
+}
+
+function removeTask(id: string) {
+  topic.value.tasks = topic.value.tasks.filter(t => t.id !== id);
+  syncTask(id);
 }
 </script>
 
@@ -58,7 +54,7 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
     <template #body>
       <UForm v-if="topic" class="space-y-4" :state="topic">
         <UFormField label="Description" hint="Describe it..." size="xl">
-          <UTextarea v-model="topic.description" class="w-full" @change="syncTopic" />
+          <UTextarea v-model="topic.description" class="w-full" @change="syncTopic()" />
         </UFormField>
 
         <div class="grid grid-cols-[1fr_auto_1fr] items-start w-full gap-3">
@@ -99,7 +95,7 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
               variant="outline"
               color="neutral"
               class="mt-2 self-start"
-              @click="addTimelineNode"
+              @click="addTimelineNode()"
             />
           </UFormField>
 
@@ -107,7 +103,7 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
 
           <UFormField label="Recommended Tasks" size="xl" :ui="{ label: 'items-start' }">
             <ul>
-              <template v-for="(task) in topic.tasks">
+              <template v-for="task in topic.tasks">
                 <UCheckbox
                   v-if="task.status === 'pending'"
                   :key="task.id"
@@ -117,7 +113,7 @@ function onPickDate(node: Tables<'timeline_nodes'>, v: CalendarDate) {
                   @update:model-value="task.status = 'accepted'"
                 >
                   <template #label>
-                    <UButton variant="soft" color="neutral" size="xs" icon="lucide:trash-2" />
+                    <UButton variant="soft" color="neutral" size="xs" icon="lucide:trash-2" @click="removeTask(task.id)" />
                     {{ ' ' }}
                     <span class="align-top">{{ task.title }}</span>
                   </template>
