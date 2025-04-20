@@ -58,7 +58,7 @@ onMounted(async () => {
           class="text-2xl bg-transparent!"
           to="/"
         >
-          <img class="h-20" src="../assets/brand.png" alt="NextStep">
+          <img src="../assets/brand.png" alt="NextStep">
         </UButton>
       </template>
 
