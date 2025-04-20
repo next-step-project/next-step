@@ -1,23 +1,19 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from '@nuxt/ui';
 
+const supa = useSupabaseClient();
 const user = useSupabaseUser();
 
-const open = ref(false);
-
-const links: [NavigationMenuItem[], NavigationMenuItem[] ] = [[{
-  label: 'Topic 1',
-  to: '/topic/1',
-}], [{
+const links = ref<[NavigationMenuItem[], NavigationMenuItem[]]>([[], [{
   label: 'New Topic',
   icon: 'i-lucide-plus',
-  onSelect: async () => navigateTo(`/topic/${await createTopic()}`),
-}/* , {  label: 'Feedback',  icon: 'i-lucide-message-circle',  to: 'https://github.com/nuxt-ui-pro/dashboard',  target: '_blank',} */]];
+  onSelect: async () => navigateTo(`/topic/${await createTopic(supa)}`),
+}/* , {  label: 'Feedback',  icon: 'i-lucide-message-circle',  to: 'https://github.com/nuxt-ui-pro/dashboard',  target: '_blank',} */]]);
 
 const groups = computed(() => [{
   id: 'links',
   label: 'Go to',
-  items: links.flat().map((item) => {
+  items: links.value.flat().map((item) => {
     return typeof item.to === 'string' && item.to.startsWith('/topic/')
       ? { ...item, icon: 'i-lucide-target' }
       : item;
@@ -33,13 +29,28 @@ const groups = computed(() => [{
     target: '_blank',
   }],
 }]);
+
+onMounted(async () => {
+  if (!user.value)
+    return;
+  const { data } = await supa
+    .from('topics')
+    .select('id, title')
+    .eq('owner', user.value.id)
+    .order('created_at', { ascending: false })
+    .throwOnError();
+  links.value[0] = data.map((topic) => ({
+    label: topic.title,
+    icon: 'i-lucide-target',
+    to: `/topic/${topic.id}`,
+  }));
+})
 </script>
 
 <template>
   <UDashboardGroup unit="rem">
     <UDashboardSidebar
       id="default"
-      v-model:open="open"
       resizable
       class="bg-(--ui-bg-elevated)/25"
       :ui="{ footer: 'lg:border-t lg:border-(--ui-border)' }"

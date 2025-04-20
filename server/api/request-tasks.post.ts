@@ -21,30 +21,18 @@ export default defineEventHandler(async (ev) => {
     throw createError({ status: 404, message: 'Task not found' });
 
   // Query timeline_nodes for the given topic
-  const timelineResponse = await supa
+  const { data: timelineNodes} = await supa
     .from('timeline_nodes')
     .select('*')
-    .eq('topic_id', body.id);
-  if (timelineResponse.error) {
-    console.error('Error querying timeline_nodes:', timelineResponse.error);
-    throw createError({ status: 500, message: 'Failed to query timeline_nodes' });
-  }
+    .eq('topic_id', body.id)
+    .throwOnError();
   
   // Query tasks for the given topic
-  const tasksResponse = await supa
+  const { data: tasks } = await supa
     .from('tasks')
     .select('*')
     .eq('topic_id', body.id)
     .throwOnError();
   
-  // Concatenate timeline_nodes and tasks info
-  const timelineText = timelineResponse.data
-    .map((node: any) => `${node.title}: ${node.description}`)
-    .join('\n');
-  const tasksText = tasksResponse.data
-    .map((task: any) => `${task.title}: ${task.description} (Status: ${task.status})`)
-    .join('\n');
-  const contentForDeepseek = timelineText + '\n' + tasksText;
-  
-  return contentForDeepseek;
+  return { timelineNodes, tasks }
 });
