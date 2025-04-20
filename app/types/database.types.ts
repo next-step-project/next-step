@@ -37,9 +37,7 @@ export type Database = {
       tasks: {
         Row: {
           created_at: string | null
-          description: string
           id: string
-          requesting_tasks: boolean | null
           status: Database["public"]["Enums"]["task_status"]
           title: string
           topic_id: string
@@ -47,9 +45,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
-          description: string
           id?: string
-          requesting_tasks?: boolean | null
           status?: Database["public"]["Enums"]["task_status"]
           title: string
           topic_id: string
@@ -57,9 +53,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
-          description?: string
           id?: string
-          requesting_tasks?: boolean | null
           status?: Database["public"]["Enums"]["task_status"]
           title?: string
           topic_id?: string
@@ -116,6 +110,7 @@ export type Database = {
           description: string
           id: string
           owner: string
+          requesting_tasks: boolean | null
           title: string
           updated_at: string | null
         }
@@ -124,6 +119,7 @@ export type Database = {
           description: string
           id?: string
           owner?: string
+          requesting_tasks?: boolean | null
           title: string
           updated_at?: string | null
         }
@@ -132,6 +128,7 @@ export type Database = {
           description?: string
           id?: string
           owner?: string
+          requesting_tasks?: boolean | null
           title?: string
           updated_at?: string | null
         }
