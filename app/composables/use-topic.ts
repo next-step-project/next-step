@@ -47,7 +47,7 @@ export default async (supa: Supa, id: string) => {
       .select('*')
       .throwOnError();
     data.value.timeline_nodes.push(n[0]!);
-  }
+  };
 
   const syncTask = async (id: string) => {
     const task = toRaw(data.value.tasks.find(t => t.id === id));
