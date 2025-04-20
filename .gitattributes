@@ -1,1 +1,2 @@
 app/types/database.types.ts linguist-generated
+supabase/migrations/*.sql linguist-language=PLpgSQL
