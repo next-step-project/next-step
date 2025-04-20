@@ -72,24 +72,24 @@ export type Database = {
       timeline_nodes: {
         Row: {
           created_at: string | null
-          description: string
           id: string
+          time: string
           title: string
           topic_id: string
           updated_at: string | null
         }
         Insert: {
           created_at?: string | null
-          description: string
           id?: string
+          time?: string
           title: string
           topic_id: string
           updated_at?: string | null
         }
         Update: {
           created_at?: string | null
-          description?: string
           id?: string
+          time?: string
           title?: string
           topic_id?: string
           updated_at?: string | null
